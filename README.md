@@ -1,6 +1,6 @@
 # Smart Tours — Day‑1 MVP
 
-A super-focused MVP you can finish **today**: browse seeded tours, AI chat helper, simple checkout with Stripe (test mode), and operational webhooks (n8n-ready).
+A super-focused MVP: browse seeded tours, AI chat helper, simple checkout with Stripe (test mode), and operational webhooks (n8n-ready).
 
 ## Tech
 - **Next.js (App Router)** for web + API
