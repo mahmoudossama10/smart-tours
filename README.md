@@ -16,12 +16,8 @@ A super-focused MVP you can finish **today**: browse seeded tours, AI chat helpe
 ```bash
 # Node 18+
 npx create-next-app@latest smart-tours --ts --eslint --tailwind --app --src-dir=false --import-alias "@/*"
-# When prompted, choose defaults. After it creates the folder, replace its contents with this zip's files
 ```
-
-2) Copy these files into the generated `smart-tours` folder (overwrite).
-
-3) Install dependencies:
+2) Install dependencies:
 ```bash
 cd smart-tours
 npm i prisma @prisma/client stripe zod openai @upstash/ratelimit ioredis
@@ -30,18 +26,18 @@ npx prisma migrate dev --name init
 npm run dev
 ```
 
-4) Env vars (create `.env.local` based on `.env.example`):
+3) Env vars (create `.env.local` based on `.env.example`):
 ```bash
 cp .env.example .env.local
 # Fill in keys (OpenAI + Stripe test)
 ```
 
-5) Seed data:
+4) Seed data:
 ```bash
 npm run seed
 ```
 
-6) Test flow
+5) Test flow
 - Visit `http://localhost:3000` to see tours
 - Open a tour → try **Chat** (mock tools + OpenAI)
 - Checkout with Stripe test card: `4242 4242 4242 4242`
@@ -53,7 +49,7 @@ Create a test webhook and point it to:
 ```
 With the relevant signing secret in `.env.local`.
 
-## n8n (Optional, today if time allows)
+## n8n 
 - Import `n8n/flows/booking_alert.json`
 - Set the webhook URL in `app/api/bookings/route.ts` (POST to your n8n endpoint).
 
