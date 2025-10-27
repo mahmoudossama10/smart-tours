@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Tours — Day‑1 MVP
 
-## Getting Started
+A super-focused MVP you can finish **today**: browse seeded tours, AI chat helper, simple checkout with Stripe (test mode), and operational webhooks (n8n-ready).
 
-First, run the development server:
+## Tech
+- **Next.js (App Router)** for web + API
+- **Prisma + SQLite** for fast local DB
+- **Stripe** (test mode) for payments
+- **OpenAI** for AI Concierge (easily swappable later)
+- **n8n** flow example (booking alert)
+- Optional: add PayPal/Authorize.net & supplier imports on day 2+
 
+## Quick Start
+
+1) Create the app and install deps:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Node 18+
+npx create-next-app@latest smart-tours --ts --eslint --tailwind --app --src-dir=false --import-alias "@/*"
+# When prompted, choose defaults. After it creates the folder, replace its contents with this zip's files
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Copy these files into the generated `smart-tours` folder (overwrite).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3) Install dependencies:
+```bash
+cd smart-tours
+npm i prisma @prisma/client stripe zod openai @upstash/ratelimit ioredis
+npx prisma generate
+npx prisma migrate dev --name init
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4) Env vars (create `.env.local` based on `.env.example`):
+```bash
+cp .env.example .env.local
+# Fill in keys (OpenAI + Stripe test)
+```
 
-## Learn More
+5) Seed data:
+```bash
+npm run seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+6) Test flow
+- Visit `http://localhost:3000` to see tours
+- Open a tour → try **Chat** (mock tools + OpenAI)
+- Checkout with Stripe test card: `4242 4242 4242 4242`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stripe Webhooks
+Create a test webhook and point it to:
+```
+/api/webhooks/stripe
+```
+With the relevant signing secret in `.env.local`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## n8n (Optional, today if time allows)
+- Import `n8n/flows/booking_alert.json`
+- Set the webhook URL in `app/api/bookings/route.ts` (POST to your n8n endpoint).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Next Steps (post‑MVP)
+- Add WordPress (headless) via WPGraphQL for CMS pages
+- Add PayPal / Authorize.net through the same payments interface
+- Supplier availability (Viator/GYG/Bókun) read-only import → nightly sync via n8n
+- Redis cache + pgvector (when switching DB to Postgres)

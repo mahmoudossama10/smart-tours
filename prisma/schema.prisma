@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("USER") // was enum Role
+  createdAt DateTime @default(now())
+  bookings  Booking[]
+}
+
+model Tour {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  title         String
+  city          String
+  durationHours Int
+  priceUSD      Int
+  rating        Float       @default(4.8)
+  summary       String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // images moved to a relation
+  images        TourImage[]
+  bookings      Booking[]
+}
+
+model TourImage {
+  id     String @id @default(cuid())
+  url    String
+  tourId String
+
+  tour   Tour   @relation(fields: [tourId], references: [id])
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  userId          String
+  tourId          String
+  startDate       DateTime
+  partySize       Int
+  status          String   @default("PENDING") // was enum BookingStatus
+  totalUSD        Int
+  provider        String?
+  paymentIntentId String?
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id])
+  tour            Tour     @relation(fields: [tourId], references: [id])
+}

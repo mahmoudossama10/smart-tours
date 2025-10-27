@@ -1,0 +1,46 @@
+{
+  "name": "Booking Alert",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "webhook1",
+      "name": "Webhook booking.created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookMethods": {
+        "POST": true
+      }
+    },
+    {
+      "parameters": {
+        "channel": "operations",
+        "text": "New booking received"
+      },
+      "id": "slack1",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook booking.created": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
